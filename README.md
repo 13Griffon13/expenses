@@ -1,2 +1,2 @@
 # Expenses
-A small training progect thet sore records of your purchases(on divise) and show you statistics.
+A small training progect thet store(on divise) records of your purchases and show you statistics.
