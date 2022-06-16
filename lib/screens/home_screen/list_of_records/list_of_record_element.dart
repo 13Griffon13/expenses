@@ -3,7 +3,6 @@ import 'package:finances/screens/add_record_screen.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_bloc.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_event.dart';
 import 'package:finances/util/strings_utility.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,18 +23,34 @@ class _ListOfRecordsElementState extends State<ListOfRecordsElement> {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100.0),
+        ),
         child: Container(
           height: 50.0,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25.0),
+            gradient: LinearGradient(
+              colors: [
+                Colors.blueGrey.shade400,
+                Colors.blueGrey.shade200,
+                Colors.blueGrey.shade100,
+                Colors.white
+              ],
+              stops: const [0.0, 0.5, 0.8, 1.0],
+            ),
+          ),
           child: Stack(
             children: [
               Stack(
                 children: [
                   Positioned(
                     top: 10.0,
-                    left: 10.0,
+                    left: 14.0,
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 60),
-                      child: Text(StringsUtility.dateToString(widget.record.date)),
+                      child:
+                          Text(StringsUtility.dateToString(widget.record.date)),
                     ),
                   ),
                   Positioned(
@@ -48,7 +63,7 @@ class _ListOfRecordsElementState extends State<ListOfRecordsElement> {
                   ),
                   Positioned(
                     top: 30.0,
-                    left: 10.0,
+                    left: 14.0,
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 200),
                       child: Text(widget.record.description ?? ''),
@@ -71,14 +86,14 @@ class _ListOfRecordsElementState extends State<ListOfRecordsElement> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back),
+                        icon: const Icon(Icons.arrow_back),
                         onPressed: () {
                           showActions = !showActions;
                           setState(() {});
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.edit),
+                        icon: const Icon(Icons.edit),
                         onPressed: () {
                           showActions = !showActions;
                           Navigator.of(context)
@@ -89,7 +104,7 @@ class _ListOfRecordsElementState extends State<ListOfRecordsElement> {
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete_forever),
+                        icon: const Icon(Icons.delete_forever),
                         onPressed: () {
                           context
                               .read<ListOfRecordsBloc>()
@@ -112,5 +127,4 @@ class _ListOfRecordsElementState extends State<ListOfRecordsElement> {
       },
     );
   }
-
 }
