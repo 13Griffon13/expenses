@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           const Padding(
             padding: EdgeInsets.only(
-              bottom: 0.0,
+              bottom: 36.0,
             ),
             child: ListOfRecords(),
           ),
@@ -41,13 +41,13 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                padding: const EdgeInsets.only(top: 16.0),
+                padding: const EdgeInsets.only(top: 12.0),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
-                    colors: [Colors.white, Colors.white70, Color.fromRGBO(255, 255, 255, 0)],
-                    stops: [0.4, 0.7, 0.9],
+                    colors: [Colors.white, Colors.white54, Color.fromRGBO(255, 255, 255, 0)],
+                    stops: [0.6, 0.75, 0.95],
                   ),
                 ),
                 child: const BottomBar(),

@@ -32,7 +32,7 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
           records: _listLoader(), status: ListOfRecordsStatus.success));
     });
     on<FilterChanged>((event, emit) {
-      filterSettings = event.filterSettings;
+      filterSettings = _settingsFormat(event.filterSettings);
       emit(ListOfRecordsState(
           records: _listLoader(), status: ListOfRecordsStatus.success));
     });
@@ -43,23 +43,45 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
 
   List<PurchaseRecord> _listLoader() {
     List<PurchaseRecord> list = [];
-    hive.loadList().forEach((element) {
-      try {
-        element as PurchaseRecord;
-        if (element.date.isAfter(filterSettings.from) &&
-            element.date.isBefore(filterSettings.to)) {
-          if (filterSettings.type != null) {
-            if (filterSettings.type == element.type) {
+    hive.loadList().forEach(
+      (element) {
+        try {
+          element as PurchaseRecord;
+          if (element.date.isAfter(filterSettings.from) &&
+              element.date.isBefore(filterSettings.to)) {
+            if (filterSettings.type != null) {
+              if (filterSettings.type == element.type) {
+                list.add(element);
+              }
+            } else {
               list.add(element);
             }
-          } else {
-            list.add(element);
           }
-        }
-      } catch (e) {
-
-      }
-    },);
+        } catch (e) {}
+      },
+    );
     return list;
+  }
+
+
+  //todo need to be revisited with addition of multi category filters
+  FilterSettings _settingsFormat(FilterSettings settings) {
+    return FilterSettings(
+      to: DateTime(
+        settings.to.year,
+        settings.to.month,
+        settings.to.day,
+        23,
+        59,
+      ),
+      from: DateTime(
+        settings.from.year,
+        settings.from.month,
+        settings.from.day,
+        0,
+        0,
+      ),
+      type: settings.type,
+    );
   }
 }
