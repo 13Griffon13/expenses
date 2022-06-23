@@ -26,56 +26,58 @@ class _FilterWidgetState extends State<FilterWidget> {
           BlocProvider.of<ListOfRecordsBloc>(context)
               .add(FilterChanged(filterSettings: state.settings));
         }
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const CategorySelectionDialogue();
-                    });
-              },
-              icon: Icon(
-                state.settings.type == null
-                    ? Icons.filter_alt_outlined
-                    : Icons.filter_alt_sharp,
+        return Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const CategorySelectionDialogue();
+                      });
+                },
+                icon: Icon(
+                  state.settings.type == null
+                      ? Icons.filter_alt_outlined
+                      : Icons.filter_alt_sharp,
+                ),
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                DatePicker.showDatePicker(
-                  context,
-                  showTitleActions: true,
-                  onChanged: (date) {},
-                  onConfirm: (date) {
-                    BlocProvider.of<FilterBloc>(context)
-                        .add(FromChanged(dateTime: date));
-                  },
-                  currentTime: state.settings.from,
-                  locale: LocaleType.en,
-                );
-              },
-              child: Text(StringsUtility.dateToString(state.settings.from)),
-            ),
-            TextButton(
-              onPressed: () async {
-                await DatePicker.showDatePicker(
-                  context,
-                  showTitleActions: true,
-                  onChanged: (date) {},
-                  onConfirm: (date) {
-                    BlocProvider.of<FilterBloc>(context)
-                        .add(ToChanged(dateTime: date));
-                  },
-                  currentTime: state.settings.to,
-                  locale: LocaleType.en,
-                );
-              },
-              child: Text(StringsUtility.dateToString(state.settings.to)),
-            ),
-          ],
+              TextButton(
+                onPressed: () {
+                  DatePicker.showDatePicker(
+                    context,
+                    showTitleActions: true,
+                    onChanged: (date) {},
+                    onConfirm: (date) {
+                      BlocProvider.of<FilterBloc>(context)
+                          .add(FromChanged(dateTime: date));
+                    },
+                    currentTime: state.settings.from,
+                    locale: LocaleType.en,
+                  );
+                },
+                child: Text(StringsUtility.dateToString(state.settings.from)),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await DatePicker.showDatePicker(
+                    context,
+                    showTitleActions: true,
+                    onChanged: (date) {},
+                    onConfirm: (date) {
+                      BlocProvider.of<FilterBloc>(context)
+                          .add(ToChanged(dateTime: date));
+                    },
+                    currentTime: state.settings.to,
+                    locale: LocaleType.en,
+                  );
+                },
+                child: Text(StringsUtility.dateToString(state.settings.to)),
+              ),
+            ],
+          ),
         );
       },
     );

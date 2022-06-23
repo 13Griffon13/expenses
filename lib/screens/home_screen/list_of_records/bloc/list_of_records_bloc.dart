@@ -1,10 +1,10 @@
 import 'package:finances/model/filter_settings.dart';
+import 'package:finances/model/purchase_record.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_event.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_state.dart';
 import 'package:finances/services/hive_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../model/purchase_record.dart';
 import 'list_of_records_state.dart';
 
 class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
@@ -59,7 +59,7 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
       } catch (e) {
 
       }
-    });
+    },);
     return list;
   }
 }

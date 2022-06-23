@@ -1,4 +1,5 @@
 import 'package:finances/screens/add_record_screen.dart';
+import 'package:finances/screens/home_screen/bottom_bar.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_bloc.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_state.dart';
 import 'package:finances/screens/home_screen/filter/filter_widget.dart';
@@ -31,36 +32,25 @@ class _HomePageState extends State<HomePage> {
       body: Stack(
         children: [
           const Padding(
-            padding: EdgeInsets.only(bottom: 32.0),
+            padding: EdgeInsets.only(
+              bottom: 0.0,
+            ),
             child: ListOfRecords(),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                padding: const EdgeInsets.only(top: 32.0),
+                padding: const EdgeInsets.only(top: 16.0),
                 decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [Colors.white, Color.fromRGBO(255, 255, 255, 0)],
-                )),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const FilterWidget(),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) {
-                            return AddRecordScreen();
-                          }),
-                        );
-                      },
-                      icon: const Icon(Icons.add),
-                    ),
-                  ],
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [Colors.white, Colors.white70, Color.fromRGBO(255, 255, 255, 0)],
+                    stops: [0.4, 0.7, 0.9],
+                  ),
                 ),
+                child: const BottomBar(),
               ),
             ],
           ),

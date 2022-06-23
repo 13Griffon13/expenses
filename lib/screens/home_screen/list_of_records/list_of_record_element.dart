@@ -37,7 +37,7 @@ class _ListOfRecordsElementState extends State<ListOfRecordsElement> {
                 Colors.blueGrey.shade100,
                 Colors.white
               ],
-              stops: const [0.0, 0.5, 0.8, 1.0],
+              stops: const [0.0, 0.5, 0.7, 1.0],
             ),
           ),
           child: Stack(

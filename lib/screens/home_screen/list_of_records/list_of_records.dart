@@ -1,7 +1,6 @@
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_bloc.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_state.dart';
 import 'package:finances/screens/home_screen/list_of_records/list_of_record_element.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,19 +20,32 @@ class ListOfRecords extends StatelessWidget {
               sum = sum + element.sum;
               items.add(ListOfRecordsElement(record: element));
             });
-            items.insert(
-              0,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text('Total: $sum'),
-                ],
-              ),
-            );
-            return SingleChildScrollView(
-              child: Column(
-                children: items,
-              ),
+            return Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(
+                    right: 12.0,
+                  ),
+                  alignment: AlignmentDirectional.bottomEnd,
+                  child: Text('Total: $sum'),
+                ),
+                Container(
+                  height: 1.5,
+                  decoration: const BoxDecoration(
+                      color: Colors.blueGrey,
+                      gradient: LinearGradient(
+                        colors: [Colors.white30, Colors.grey],
+                        stops: [0.0, 0.7],
+                      )),
+                ),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: items,
+                    ),
+                  ),
+                ),
+              ],
             );
           case ListOfRecordsStatus.loading:
             return const Center(child: CircularProgressIndicator());
