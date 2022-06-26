@@ -1,11 +1,11 @@
 import 'package:finances/model/filter_settings.dart';
 import 'package:finances/model/purchase_record.dart';
 
-enum ListOfRecordsStatus { initial, loading, success, error }
+enum ListOfRecordsStatus {loading, success, error }
 
 class ListOfRecordsState {
   ListOfRecordsState(
-      {this.status = ListOfRecordsStatus.initial, List<PurchaseRecord>? records})
+      {this.status = ListOfRecordsStatus.success, List<PurchaseRecord>? records})
       : records = records ?? const [];
 
 

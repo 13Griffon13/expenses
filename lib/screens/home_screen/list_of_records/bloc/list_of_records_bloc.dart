@@ -8,18 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'list_of_records_state.dart';
 
 class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
-  ListOfRecordsBloc() : super(ListOfRecordsState()) {
+  ListOfRecordsBloc({required this.hive}) : super(ListOfRecordsState()) {
     on<InitiateRecords>((event, emit) async {
-      try {
-        emit(ListOfRecordsState(status: ListOfRecordsStatus.loading));
-        await hive.init();
-        emit(
-          ListOfRecordsState(
-              records: _listLoader(), status: ListOfRecordsStatus.success),
-        );
-      } catch (e) {
-        emit(ListOfRecordsState(status: ListOfRecordsStatus.error));
-      }
+
     });
     on<RecordDeleted>((event, emit) {
       hive.deleteRecord(event.record);
@@ -39,7 +30,7 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
   }
 
   FilterSettings filterSettings = FilterSettings();
-  HiveService hive = HiveService();
+  HiveService hive;
 
   List<PurchaseRecord> _listLoader() {
     List<PurchaseRecord> list = [];
@@ -49,8 +40,8 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
           element as PurchaseRecord;
           if (element.date.isAfter(filterSettings.from) &&
               element.date.isBefore(filterSettings.to)) {
-            if (filterSettings.type != null) {
-              if (filterSettings.type == element.type) {
+            if (filterSettings.categories != null) {
+              if (filterSettings.categories!.contains(element.category)) {
                 list.add(element);
               }
             } else {
@@ -81,7 +72,7 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
         0,
         0,
       ),
-      type: settings.type,
+      categories: settings.categories,
     );
   }
 }

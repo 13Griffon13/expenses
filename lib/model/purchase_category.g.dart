@@ -1,44 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'purchase_record.dart';
+part of 'purchase_category.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PurchaseRecordAdapter extends TypeAdapter<PurchaseRecord> {
+class PurchaseCategoryAdapter extends TypeAdapter<PurchaseCategory> {
   @override
-  final int typeId = 1;
+  final int typeId = 2;
 
   @override
-  PurchaseRecord read(BinaryReader reader) {
+  PurchaseCategory read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return PurchaseRecord(
+    return PurchaseCategory(
       id: fields[0] as String,
-      sum: fields[2] as double,
-      date: fields[1] as DateTime,
-      category: fields[3] as PurchaseCategory,
-      description: fields[4] as String?,
+      name: fields[1] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, PurchaseRecord obj) {
+  void write(BinaryWriter writer, PurchaseCategory obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.date)
-      ..writeByte(2)
-      ..write(obj.sum)
-      ..writeByte(3)
-      ..write(obj.category)
-      ..writeByte(4)
-      ..write(obj.description);
+      ..write(obj.name);
   }
 
   @override
@@ -47,7 +38,7 @@ class PurchaseRecordAdapter extends TypeAdapter<PurchaseRecord> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PurchaseRecordAdapter &&
+      other is PurchaseCategoryAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

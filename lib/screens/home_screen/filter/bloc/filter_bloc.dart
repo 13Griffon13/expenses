@@ -12,7 +12,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
           settings: FilterSettings(
             to: state.settings.to,
             from: event.dateTime,
-            type: state.settings.type,
+            categories: state.settings.categories,
           ),
           status: FilterStateStatus.success,
         ),
@@ -24,7 +24,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
           settings: FilterSettings(
             to: event.dateTime,
             from: state.settings.from,
-            type: state.settings.type,
+            categories: state.settings.categories,
           ),
           status: FilterStateStatus.success,
         ),
@@ -36,7 +36,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
           settings: FilterSettings(
             to: state.settings.to,
             from: state.settings.from,
-            type: event.type,
+            categories: event.categories,
           ),
           status: FilterStateStatus.success,
         ),

@@ -1,4 +1,6 @@
+import 'package:finances/model/purchase_category.dart';
 import 'package:finances/model/purchase_record.dart';
+import 'package:finances/screens/categories_bloc/categories_bloc.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_bloc.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_event.dart';
 import 'package:finances/util/strings_utility.dart';
@@ -10,26 +12,25 @@ import 'package:uuid/uuid.dart';
 class AddRecordScreen extends StatefulWidget {
   PurchaseRecord record;
 
-  AddRecordScreen({PurchaseRecord? record})
-      : record = record ??
-            PurchaseRecord(
-              id: const Uuid().v1(),
-              sum: 100.0,
-              date: DateTime.now(),
-              type: PurchaseTypes.groceries,
-            );
+  AddRecordScreen({required this.record});
+
 
   @override
   State<StatefulWidget> createState() {
-    return _AddRecordScreenSate();
+    return _AddRecordScreenSate(record.category);
   }
 }
 
 class _AddRecordScreenSate extends State<AddRecordScreen> {
-  PurchaseTypes dropdownValue = PurchaseTypes.groceries;
+
+  PurchaseCategory dropdownValue;
+
+  _AddRecordScreenSate(this.dropdownValue);
 
   @override
   Widget build(BuildContext context) {
+    List<PurchaseCategory>categories =
+        BlocProvider.of<CategoriesBloc>(context).state.categories;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -82,15 +83,15 @@ class _AddRecordScreenSate extends State<AddRecordScreen> {
                 },
               ),
             ),
-            DropdownButton<PurchaseTypes>(
-              items: PurchaseTypes.values.map((PurchaseTypes type) {
-                return DropdownMenuItem<PurchaseTypes>(
-                  value: type,
-                  child: Text(type.name),
+            DropdownButton<PurchaseCategory>(
+              items: categories.map((PurchaseCategory category) {
+                return DropdownMenuItem<PurchaseCategory>(
+                  value: category,
+                  child: Text(category.name),
                 );
               }).toList(),
               onChanged: (newValue) {
-                widget.record.type = newValue!;
+                widget.record.category = newValue!;
                 setState(() {
                   dropdownValue = newValue!;
                 });
@@ -100,13 +101,13 @@ class _AddRecordScreenSate extends State<AddRecordScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                controller: TextEditingController(text: widget.record.description ?? ''),
+                controller: TextEditingController(
+                    text: widget.record.description ?? ''),
                 decoration: const InputDecoration(
                   hintText: 'Description(optional)',
                 ),
                 onChanged: (description) {
                   widget.record.description = description;
-
                 },
                 onSubmitted: (description) {
                   widget.record.description = description;

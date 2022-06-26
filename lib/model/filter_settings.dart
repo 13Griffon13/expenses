@@ -1,11 +1,12 @@
+import 'package:finances/model/purchase_category.dart';
 import 'package:finances/model/purchase_record.dart';
 
 class FilterSettings {
   DateTime from;
   DateTime to;
-  PurchaseTypes? type;
+  List<PurchaseCategory>? categories;
 
-  FilterSettings({DateTime? from, DateTime? to, this.type})
+  FilterSettings({DateTime? from, DateTime? to, this.categories})
       : from = from ?? DateTime.now().subtract(const Duration(days: 30)),
         to = to ?? DateTime.now();
 

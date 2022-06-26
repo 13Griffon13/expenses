@@ -1,3 +1,4 @@
+import 'package:finances/model/purchase_category.dart';
 import 'package:finances/model/purchase_record.dart';
 
 abstract class FilterEvent{
@@ -19,8 +20,8 @@ class ToChanged extends DateChanged{
 }
 
 class CategoryChanged extends FilterEvent{
-  PurchaseTypes? type;
+  List<PurchaseCategory>? categories;
 
-  CategoryChanged({required this.type});
+  CategoryChanged({required this.categories});
 }
 

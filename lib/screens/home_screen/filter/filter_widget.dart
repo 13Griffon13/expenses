@@ -39,7 +39,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                       });
                 },
                 icon: Icon(
-                  state.settings.type == null
+                  state.settings.categories == null
                       ? Icons.filter_alt_outlined
                       : Icons.filter_alt_sharp,
                 ),

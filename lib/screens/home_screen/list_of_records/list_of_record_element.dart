@@ -58,7 +58,7 @@ class _ListOfRecordsElementState extends State<ListOfRecordsElement> {
                     left: 80.0,
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 130),
-                      child: Text(widget.record.type.name),
+                      child: Text(widget.record.category.name),
                     ),
                   ),
                   Positioned(

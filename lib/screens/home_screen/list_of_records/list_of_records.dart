@@ -51,8 +51,6 @@ class ListOfRecords extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           case ListOfRecordsStatus.error:
             return const Center(child: Icon(Icons.error));
-          case ListOfRecordsStatus.initial:
-            return const Text('Initialisation...');
         }
       },
     );
