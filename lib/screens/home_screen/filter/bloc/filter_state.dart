@@ -9,4 +9,7 @@ class FilterState {
   FilterState({FilterStateStatus? status, FilterSettings? settings})
       : status = status ?? FilterStateStatus.initial,
         settings = settings ?? FilterSettings();
+
+
+
 }

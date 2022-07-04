@@ -1,6 +1,6 @@
 import 'package:finances/model/purchase_record.dart';
 import 'package:finances/screens/add_record_screen.dart';
-import 'package:finances/screens/categories_bloc/categories_bloc.dart';
+import 'package:finances/screens/categories_screen/categories_bloc/categories_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';

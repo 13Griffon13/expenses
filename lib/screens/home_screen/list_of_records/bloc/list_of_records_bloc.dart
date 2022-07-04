@@ -8,9 +8,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'list_of_records_state.dart';
 
 class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
+
+  FilterSettings filterSettings = FilterSettings();
+  HiveService hive;
+
   ListOfRecordsBloc({required this.hive}) : super(ListOfRecordsState()) {
     on<InitiateRecords>((event, emit) async {
-
+      filterSettings = _settingsFormat(filterSettings);
+      emit(ListOfRecordsState(
+          records: _listLoader(), status: ListOfRecordsStatus.success));
     });
     on<RecordDeleted>((event, emit) {
       hive.deleteRecord(event.record);
@@ -29,8 +35,7 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
     });
   }
 
-  FilterSettings filterSettings = FilterSettings();
-  HiveService hive;
+
 
   List<PurchaseRecord> _listLoader() {
     List<PurchaseRecord> list = [];
@@ -38,15 +43,8 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
       (element) {
         try {
           element as PurchaseRecord;
-          if (element.date.isAfter(filterSettings.from) &&
-              element.date.isBefore(filterSettings.to)) {
-            if (filterSettings.categories != null) {
-              if (filterSettings.categories!.contains(element.category)) {
-                list.add(element);
-              }
-            } else {
-              list.add(element);
-            }
+          if (_dateFilter(element) && _categoryFilter(element)) {
+            list.add(element);
           }
         } catch (e) {}
       },
@@ -54,6 +52,25 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
     return list;
   }
 
+  bool _dateFilter(PurchaseRecord record){
+    return record.date.isAfter(filterSettings.from) &&
+        record.date.isBefore(filterSettings.to);
+  }
+
+
+  //todo find out why it wasn't work with list.contain()
+  bool _categoryFilter(PurchaseRecord record) {
+    if(filterSettings.categories == null){
+      return true;
+    }else{
+      for (var element in filterSettings.categories!) {
+        if(element.compareWith(record.category)){
+          return true;
+        }
+      }
+      return false;
+    }
+  }
 
   //todo need to be revisited with addition of multi category filters
   FilterSettings _settingsFormat(FilterSettings settings) {

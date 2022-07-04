@@ -1,5 +1,4 @@
 import 'package:finances/model/purchase_category.dart';
-import 'package:finances/model/purchase_record.dart';
 
 abstract class FilterEvent{
 

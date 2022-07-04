@@ -10,4 +10,8 @@ class PurchaseCategory {
   String name;
 
   PurchaseCategory({required this.id, required this.name});
+
+  bool compareWith(PurchaseCategory category){
+    return category.id==id;
+  }
 }

@@ -2,16 +2,7 @@ import 'package:finances/model/purchase_category.dart';
 import 'package:hive/hive.dart';
 
 part 'purchase_record.g.dart';
-//
-// @HiveType(typeId: 2)
-// enum PurchaseTypes {
-//   @HiveField(0)
-//   groceries,
-//   @HiveField(1)
-//   medicine,
-//   @HiveField(2)
-//   entertainments,
-// }
+
 
 @HiveType(typeId: 1)
 class PurchaseRecord {

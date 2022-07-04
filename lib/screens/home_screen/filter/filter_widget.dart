@@ -1,10 +1,7 @@
-import 'package:finances/model/purchase_record.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_bloc.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_event.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_state.dart';
 import 'package:finances/screens/home_screen/filter/category_selection_dialogue.dart';
-import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_bloc.dart';
-import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_event.dart';
 import 'package:finances/util/strings_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,10 +19,6 @@ class _FilterWidgetState extends State<FilterWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<FilterBloc, FilterState>(
       builder: (context, state) {
-        if (state.status == FilterStateStatus.success) {
-          BlocProvider.of<ListOfRecordsBloc>(context)
-              .add(FilterChanged(filterSettings: state.settings));
-        }
         return Expanded(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

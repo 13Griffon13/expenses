@@ -1,6 +1,6 @@
 import 'package:finances/model/purchase_category.dart';
-import 'package:finances/screens/categories_bloc/categories_bloc.dart';
-import 'package:finances/screens/categories_bloc/categories_state.dart';
+import 'package:finances/screens/categories_screen/categories_bloc/categories_bloc.dart';
+import 'package:finances/screens/categories_screen/categories_bloc/categories_state.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_bloc.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_state.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_bloc.dart';
@@ -14,7 +14,7 @@ import 'screens/home_screen/home.dart';
 
 void main() async {
   HiveService hive = HiveService();
-  hive.init();
+  await hive.init();
   runApp(MyApp(
     hive: hive,
   ));
@@ -30,15 +30,27 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ListOfRecordsBloc>(create: (context) {
-          ListOfRecordsBloc bloc = ListOfRecordsBloc( hive:  hive);
+          ListOfRecordsBloc bloc = ListOfRecordsBloc(
+            hive: hive,
+          );
           bloc.add(InitiateRecords());
           return bloc;
         }),
         BlocProvider<FilterBloc>(create: (BuildContext context) {
-          return FilterBloc(FilterState());
+          FilterBloc bloc = FilterBloc(FilterState());
+          bloc.stream.listen((event) {
+            if (event.status == FilterStateStatus.success) {
+              BlocProvider.of<ListOfRecordsBloc>(context)
+                  .add(FilterChanged(filterSettings: event.settings));
+            }
+          });
+          return bloc;
         }),
         BlocProvider(create: (context) {
-          return CategoriesBloc(_initCategoriesState());
+          return CategoriesBloc(
+            initialState: _initCategoriesState(),
+            hive: hive,
+          );
         }),
       ],
       child: MaterialApp(
@@ -46,19 +58,19 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
         ),
-        home: SafeArea(
+        home: const SafeArea(
           child: HomePage(),
         ),
       ),
     );
   }
 
-  CategoriesState _initCategoriesState(){
-    List<PurchaseCategory> categories=[];
+  CategoriesState _initCategoriesState() {
+    List<PurchaseCategory> categories = [];
     hive.loadCategories().forEach((element) {
       categories.add(element);
     });
-    if(categories.isEmpty){
+    if (categories.isEmpty) {
       categories.add(BasicCategories.groceries);
       hive.addCategory(BasicCategories.groceries);
       categories.add(BasicCategories.medicine);

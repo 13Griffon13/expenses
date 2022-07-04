@@ -1,35 +1,28 @@
 import 'package:finances/model/purchase_category.dart';
 import 'package:finances/model/purchase_record.dart';
-import 'package:finances/screens/categories_bloc/categories_bloc.dart';
+import 'package:finances/screens/categories_screen/categories_bloc/categories_bloc.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_bloc.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_event.dart';
 import 'package:finances/util/strings_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:uuid/uuid.dart';
 
 class AddRecordScreen extends StatefulWidget {
   PurchaseRecord record;
 
-  AddRecordScreen({required this.record});
-
+  AddRecordScreen({Key? key, required this.record}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _AddRecordScreenSate(record.category);
+    return _AddRecordScreenState();
   }
 }
 
-class _AddRecordScreenSate extends State<AddRecordScreen> {
-
-  PurchaseCategory dropdownValue;
-
-  _AddRecordScreenSate(this.dropdownValue);
-
+class _AddRecordScreenState extends State<AddRecordScreen> {
   @override
   Widget build(BuildContext context) {
-    List<PurchaseCategory>categories =
+    List<PurchaseCategory> categories =
         BlocProvider.of<CategoriesBloc>(context).state.categories;
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +34,7 @@ class _AddRecordScreenSate extends State<AddRecordScreen> {
         ),
         title: const Text('Add Record'),
       ),
-      body: Container(
+      body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,13 +51,16 @@ class _AddRecordScreenSate extends State<AddRecordScreen> {
                   onConfirm: (date) {
                     widget.record.date = date;
                   },
-                  currentTime: DateTime.now(),
+                  currentTime: widget.record.date,
                   locale: LocaleType.en,
                 );
                 setState(() {});
               },
               child: Text(
                 StringsUtility.dateToString(widget.record.date),
+                style: const TextStyle(
+                  fontSize: 16.0,
+                ),
               ),
             ),
             Padding(
@@ -73,7 +69,7 @@ class _AddRecordScreenSate extends State<AddRecordScreen> {
                 controller: TextEditingController(
                   text: widget.record.sum.toString(),
                 ),
-                keyboardType: TextInputType.numberWithOptions(),
+                keyboardType: const TextInputType.numberWithOptions(),
                 maxLines: 1,
                 onChanged: (text) {
                   widget.record.sum = double.parse(text);
@@ -92,11 +88,9 @@ class _AddRecordScreenSate extends State<AddRecordScreen> {
               }).toList(),
               onChanged: (newValue) {
                 widget.record.category = newValue!;
-                setState(() {
-                  dropdownValue = newValue!;
-                });
+                setState(() {});
               },
-              value: dropdownValue,
+              value: widget.record.category,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

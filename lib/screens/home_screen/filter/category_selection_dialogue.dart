@@ -1,5 +1,5 @@
-import 'package:finances/model/purchase_record.dart';
-import 'package:finances/screens/categories_bloc/categories_bloc.dart';
+import 'package:finances/model/purchase_category.dart';
+import 'package:finances/screens/categories_screen/categories_bloc/categories_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,20 +17,36 @@ class CategorySelectionDialogue extends StatefulWidget {
 }
 
 class _CategorySelectionDialogueState extends State<CategorySelectionDialogue> {
+  List<PurchaseCategory> categories = [];
+
   @override
   Widget build(BuildContext context) {
     var _bloc = BlocProvider.of<FilterBloc>(context);
-    List<Widget> categories = [];
+    List<Widget> categoriesWidgets = [];
 
     for (var element
         in BlocProvider.of<CategoriesBloc>(context).state.categories) {
-      categories.add(TextButton(
-        onPressed: () {
-          // _bloc.add(CategoryChanged(categories: element));
-          Navigator.of(context).pop();
-        },
-        child: Text(element.name),
-      ));
+      categoriesWidgets.add(
+        CheckboxListTile(
+          value: _bloc.state.settings.isCategorySelected(element),
+          onChanged: (newValue) {
+            if (newValue!) {
+              categories.add(element);
+              _bloc.add(
+                CategoryChanged(categories: categories),
+              );
+            } else {
+              categories
+                  .remove(element);
+              _bloc.add(
+                CategoryChanged(categories: categories),
+              );
+            }
+            setState(() {});
+          },
+          title: Text(element.name),
+        ),
+      );
     }
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -39,13 +55,14 @@ class _CategorySelectionDialogueState extends State<CategorySelectionDialogue> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: categories,
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: categoriesWidgets,
+                ),
               ),
             ),
-            const Spacer(),
             TextButton(
               onPressed: () {
                 _bloc.add(CategoryChanged(categories: null));
