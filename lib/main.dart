@@ -1,4 +1,5 @@
 import 'package:finances/model/purchase_category.dart';
+import 'package:finances/screens/authorization/sign_in_screen.dart';
 import 'package:finances/screens/categories_screen/categories_bloc/categories_bloc.dart';
 import 'package:finances/screens/categories_screen/categories_bloc/categories_state.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_bloc.dart';
@@ -9,8 +10,6 @@ import 'package:finances/services/hive_service.dart';
 import 'package:finances/util/basic_category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'screens/home_screen/home.dart';
 
 void main() async {
   HiveService hive = HiveService();
@@ -58,8 +57,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
         ),
-        home: const SafeArea(
-          child: HomePage(),
+        home: SafeArea(
+          //child: HomePage(),
+          child: SignInScreen(),
         ),
       ),
     );
