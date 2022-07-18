@@ -29,8 +29,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  hive: ^2.2.1
-  hive_flutter: ^1.1.0
   flutter_datetime_picker: ^1.5.1
   uuid: ^3.0.6
   flutter_bloc: ^8.0.1
@@ -39,8 +37,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  hive_generator: ^1.1.2
-  build_runner: ^2.1.7
 
 
   # The "flutter_lints" package below contains a set of recommended lints to

@@ -8,7 +8,10 @@ class FilterState {
 
   FilterState({FilterStateStatus? status, FilterSettings? settings})
       : status = status ?? FilterStateStatus.initial,
-        settings = settings ?? FilterSettings();
+        settings = settings ?? FilterSettings(
+          from: DateTime.now().subtract(const Duration(days: 30)),
+          to: DateTime.now(),
+        );
 
 
 

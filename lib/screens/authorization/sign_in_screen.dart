@@ -1,7 +1,11 @@
 import 'package:finances/screens/authorization/auth_text_field.dart';
+import 'package:finances/screens/authorization/bloc/auth_bloc.dart';
+import 'package:finances/screens/authorization/bloc/auth_event.dart';
+import 'package:finances/screens/authorization/bloc/auth_state.dart';
 import 'package:finances/screens/authorization/sign_up_screen.dart';
 import 'package:finances/screens/home_screen/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({Key? key}) : super(key: key);
@@ -12,52 +16,69 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            const Text("Finances"),
-            AuthTextField(
-                type: AuthFieldType.login,
-                controller: loginController,
-                name: "Login"),
-            AuthTextField(
-                type: AuthFieldType.password,
-                controller: passwordController,
-                name: "Password"),
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context)
-                    .pushReplacement(MaterialPageRoute(builder: (_) {
-                  return const HomePage();
-                }));
-              },
-              child: const Text("SignIn"),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Don't have a account?"),
-                TextButton(
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(
-                      color: Colors.blue,
+      body: BlocBuilder<AuthBloc, AuthState>(
+          bloc: BlocProvider.of<AuthBloc>(context),
+          builder: (context, state) {
+            if (state.status == AuthStatus.signedIn) {
+              return const HomePage();
+            }
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const Text("Finances"),
+                  AuthTextField(
+                      type: AuthFieldType.login,
+                      controller: loginController,
+                      name: "Login"),
+                  AuthTextField(
+                      type: AuthFieldType.password,
+                      controller: passwordController,
+                      name: "Password"),
+                  if(state.status != AuthStatus.loading)
+                    TextButton(
+                      onPressed: () {
+                        BlocProvider.of<AuthBloc>(context).add(AuthSignIn(
+                            loginController.text, passwordController.text));
+                      },
+                      child: const Text("SignIn"),
+                    )
+                  else
+                    const Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                      return SignUpScreen();
-                    }));
-                  },
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
+                  if (state.status == AuthStatus.error)
+                    Text(
+                      state.error ?? "Unhandled error",
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Don't have a account?"),
+                      TextButton(
+                        child: const Text(
+                          "Sign Up",
+                          style: TextStyle(
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) {
+                              return SignUpScreen();
+                            }),
+                          );
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          }),
     );
   }
 }

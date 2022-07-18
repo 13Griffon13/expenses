@@ -1,6 +1,7 @@
 import 'package:finances/global_widgets/interactive_list_item.dart';
+import 'package:finances/model/purchase_category.dart';
 import 'package:finances/model/purchase_record.dart';
-import 'package:finances/screens/add_record_screen.dart';
+import 'package:finances/screens/edit_record_screen.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_bloc.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_event.dart';
 import 'package:finances/util/strings_utility.dart';
@@ -9,8 +10,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ListOfRecordsElement extends StatefulWidget {
   final PurchaseRecord record;
+  final PurchaseCategory category;
 
-  const ListOfRecordsElement({Key? key, required this.record})
+  const ListOfRecordsElement(
+      {Key? key, required this.record, required this.category})
       : super(key: key);
 
   @override
@@ -43,7 +46,8 @@ class _ListOfRecordsElementState extends State<ListOfRecordsElement> {
               left: 14.0,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 60),
-                child: _formattedText(StringsUtility.dateToString(widget.record.date)),
+                child: _formattedText(
+                    StringsUtility.dateToString(widget.record.date)),
               ),
             ),
             Positioned(
@@ -51,7 +55,7 @@ class _ListOfRecordsElementState extends State<ListOfRecordsElement> {
               left: 80.0,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 180),
-                child: _formattedText(widget.record.category.name),
+                child: _formattedText(widget.category.name),
               ),
             ),
             Positioned(
@@ -84,15 +88,18 @@ class _ListOfRecordsElementState extends State<ListOfRecordsElement> {
       onEdit: () {
         showActions = !showActions;
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return AddRecordScreen(record: widget.record);
+          return EditRecordScreen(record: widget.record);
         }));
         setState(() {});
       },
     );
   }
 
-  Widget _formattedText(String string){
-    return Text(string, maxLines: 1, overflow: TextOverflow.ellipsis,);
+  Widget _formattedText(String string) {
+    return Text(
+      string,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
   }
-
 }

@@ -1,17 +1,25 @@
-import 'package:hive/hive.dart';
 
-part 'purchase_category.g.dart';
-
-@HiveType(typeId: 2)
 class PurchaseCategory {
-  @HiveField(0)
   String id;
-  @HiveField(1)
   String name;
 
   PurchaseCategory({required this.id, required this.name});
 
-  bool compareWith(PurchaseCategory category){
-    return category.id==id;
+  PurchaseCategory.fromMap(Map<String, dynamic> map):
+      id = map['id'],
+      name = map['name'];
+
+
+  Map<String, String> toMap() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
+
+
+
+  bool compareWith(PurchaseCategory category) {
+    return category.id == id;
   }
 }

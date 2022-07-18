@@ -2,94 +2,113 @@ import 'package:finances/model/filter_settings.dart';
 import 'package:finances/model/purchase_record.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_event.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_state.dart';
-import 'package:finances/services/hive_service.dart';
+import 'package:finances/services/firebase_services.dart';
+import 'package:firedart/firestore/models.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'list_of_records_state.dart';
 
 class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
+  FilterSettings filterSettings = FilterSettings(
+    from: DateTime.now().subtract(const Duration(days: 30)),
+    to: DateTime.now(),
+  );
+  FirebaseServices firebaseServices;
 
-  FilterSettings filterSettings = FilterSettings();
-  HiveService hive;
+  //variable docName will might be needed for optimization update, in witch
+  //records will be saved not in 1 documents but to multiple documents
+  // depending on date
+  static const String docName = "records";
 
-  ListOfRecordsBloc({required this.hive}) : super(ListOfRecordsState()) {
-    on<InitiateRecords>((event, emit) async {
-      filterSettings = _settingsFormat(filterSettings);
+  ListOfRecordsBloc({required this.firebaseServices})
+      : super(ListOfRecordsState()) {
+    firebaseServices.recordsStream(docName).listen((event) {
+      emit(ListOfRecordsState(status: ListOfRecordsStatus.loading));
+      _exceptionCheck(() async {
+        emit(ListOfRecordsState(
+            records: _listLoader(event), status: ListOfRecordsStatus.success));
+      });
+    });
+    on<InitialListOfRecords>((event, emit) async {
+      emit(ListOfRecordsState(status: ListOfRecordsStatus.loading));
+    });
+    on<CategoriesChanged>((event,emit){
       emit(ListOfRecordsState(
-          records: _listLoader(), status: ListOfRecordsStatus.success));
+        status: ListOfRecordsStatus.success,
+        records: state.records,
+      ));
     });
     on<RecordDeleted>((event, emit) {
-      hive.deleteRecord(event.record);
-      emit(ListOfRecordsState(
-          records: _listLoader(), status: ListOfRecordsStatus.success));
+      emit(ListOfRecordsState(status: ListOfRecordsStatus.loading));
+      _exceptionCheck(() async {
+        await firebaseServices.deleteRecord(event.record, docName);
+      });
     });
-    on<RecordEdited>((event, emit) {
-      hive.saveRecord(event.record);
-      emit(ListOfRecordsState(
-          records: _listLoader(), status: ListOfRecordsStatus.success));
+    on<RecordAdded>((event, emit) async {
+      emit(ListOfRecordsState(status: ListOfRecordsStatus.loading));
+      _exceptionCheck(() async {
+        await firebaseServices.saveRecord(event.record, docName);
+      });
     });
-    on<FilterChanged>((event, emit) {
-      filterSettings = _settingsFormat(event.filterSettings);
-      emit(ListOfRecordsState(
-          records: _listLoader(), status: ListOfRecordsStatus.success));
+    on<RecordEdited>((event, emit) async {
+      emit(ListOfRecordsState(status: ListOfRecordsStatus.loading));
+      _exceptionCheck(() async {
+        await firebaseServices.editRecord(event.record, docName);
+      });
+    });
+    on<FilterChanged>((event, emit) async{
+      emit(ListOfRecordsState(status: ListOfRecordsStatus.loading));
+      filterSettings = event.filterSettings;
+      await firebaseServices
+          .getRecords(filterSettings,docName)
+          .then((value) => emit(ListOfRecordsState(
+          status: ListOfRecordsStatus.success,
+          records: _listLoader(value))));
     });
   }
 
-
-
-  List<PurchaseRecord> _listLoader() {
+  List<PurchaseRecord> _listLoader(List<Document> documents) {
     List<PurchaseRecord> list = [];
-    hive.loadList().forEach(
-      (element) {
-        try {
-          element as PurchaseRecord;
-          if (_dateFilter(element) && _categoryFilter(element)) {
-            list.add(element);
-          }
-        } catch (e) {}
-      },
-    );
+    for (var element in documents) {
+      try {
+        var record = PurchaseRecord.fromMap(element.map);
+        if (_dateFilter(record) && _categoryFilter(record)) {
+          list.add(record);
+        }
+      } catch (e) {
+        emit(
+            ListOfRecordsState(status: ListOfRecordsStatus.error, records: []));
+      }
+    }
     return list;
   }
 
-  bool _dateFilter(PurchaseRecord record){
+  _exceptionCheck(VoidCallback callback) {
+    try {
+      callback();
+    } catch (exception) {
+      emit(ListOfRecordsState(status: ListOfRecordsStatus.error, records: []));
+    }
+  }
+
+  bool _dateFilter(PurchaseRecord record) {
     return record.date.isAfter(filterSettings.from) &&
         record.date.isBefore(filterSettings.to);
   }
 
-
   //todo find out why it wasn't work with list.contain()
   bool _categoryFilter(PurchaseRecord record) {
-    if(filterSettings.categories == null){
+    if (filterSettings.categories == null) {
       return true;
-    }else{
+    } else {
       for (var element in filterSettings.categories!) {
-        if(element.compareWith(record.category)){
+        if (element.id == record.categoryId) {
           return true;
         }
       }
       return false;
     }
-  }
-
-  //todo need to be revisited with addition of multi category filters
-  FilterSettings _settingsFormat(FilterSettings settings) {
-    return FilterSettings(
-      to: DateTime(
-        settings.to.year,
-        settings.to.month,
-        settings.to.day,
-        23,
-        59,
-      ),
-      from: DateTime(
-        settings.from.year,
-        settings.from.month,
-        settings.from.day,
-        0,
-        0,
-      ),
-      categories: settings.categories,
-    );
   }
 }

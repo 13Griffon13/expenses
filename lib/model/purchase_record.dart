@@ -1,42 +1,31 @@
-import 'package:finances/model/purchase_category.dart';
-import 'package:hive/hive.dart';
 
-part 'purchase_record.g.dart';
-
-
-@HiveType(typeId: 1)
 class PurchaseRecord {
-  @HiveField(0)
   String id;
-  @HiveField(1)
   DateTime date;
-  @HiveField(2)
   double sum;
-  @HiveField(3)
-  PurchaseCategory category;
-  @HiveField(4)
+  String categoryId;
   String? description;
 
   PurchaseRecord(
       {required this.id,
       required this.sum,
       required this.date,
-      required this.category,
+      required this.categoryId,
       this.description});
 
   PurchaseRecord.fromMap(Map<String, dynamic> map)
       : id = map['id'],
         date = map['date'],
         sum = map['sum'],
-        category = map['category'],
-        description = map['description'];
+        categoryId = map['categoryId'],
+        description = map['description']??'';
 
-  Map<String, Object> toMap() {
+  Map<String, Object> toFirebaseMap() {
     return {
       'id': id,
       'date': date,
       'sum': sum,
-      'category': category,
+      'categoryId': categoryId,
       if (description != null) 'description': description!,
     };
   }

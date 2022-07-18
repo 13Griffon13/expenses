@@ -1,6 +1,7 @@
+import 'package:finances/screens/categories_screen/categories_bloc/categories_bloc.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_bloc.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_state.dart';
-import 'package:finances/screens/home_screen/list_of_records/list_of_record_element.dart';
+import 'package:finances/screens/home_screen/list_of_records/list_of_record_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,9 +17,15 @@ class ListOfRecords extends StatelessWidget {
           case ListOfRecordsStatus.success:
             List<Widget> items = [];
             double sum = 0;
+            var categories =BlocProvider.of<CategoriesBloc>(context)
+                .state;
             state.records?.forEach((element) {
               sum = sum + element.sum;
-              items.add(ListOfRecordsElement(record: element));
+              items.add(ListOfRecordsElement(
+                record: element,
+                category:
+                    categories.getCategoryById(element.categoryId),
+              ));
             });
             return Column(
               children: [

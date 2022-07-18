@@ -13,7 +13,11 @@ class FilterChanged extends ListOfRecordsEvent{
  FilterChanged({required this.filterSettings});
 }
 
-class InitiateRecords extends ListOfRecordsEvent{
+class InitialListOfRecords extends ListOfRecordsEvent{
+
+}
+
+class CategoriesChanged extends ListOfRecordsEvent{
 
 }
 
@@ -25,6 +29,10 @@ abstract class ListChangeEvent extends ListOfRecordsEvent{
 
 class RecordDeleted extends ListChangeEvent{
   RecordDeleted({required PurchaseRecord record}) : super(record: record);
+
+}
+class RecordAdded extends ListChangeEvent{
+  RecordAdded({required PurchaseRecord record}) : super(record: record);
 
 }
 

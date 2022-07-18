@@ -8,7 +8,7 @@ import 'package:uuid/uuid.dart';
 class AddCategoryDialog extends StatelessWidget {
   AddCategoryDialog({Key? key}) : super(key: key);
 
-  TextEditingController controller = TextEditingController();
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

@@ -24,30 +24,31 @@ class _CategorySelectionDialogueState extends State<CategorySelectionDialogue> {
     var _bloc = BlocProvider.of<FilterBloc>(context);
     List<Widget> categoriesWidgets = [];
 
-    for (var element
-        in BlocProvider.of<CategoriesBloc>(context).state.categories) {
+    BlocProvider.of<CategoriesBloc>(context)
+        .state
+        .categories
+        .forEach((key, value) {
       categoriesWidgets.add(
         CheckboxListTile(
-          value: _bloc.state.settings.isCategorySelected(element),
+          value: _bloc.state.settings.isCategorySelected(value),
           onChanged: (newValue) {
             if (newValue!) {
-              categories.add(element);
+              categories.add(value);
               _bloc.add(
                 CategoryChanged(categories: categories),
               );
             } else {
-              categories
-                  .remove(element);
+              categories.remove(value);
               _bloc.add(
                 CategoryChanged(categories: categories),
               );
             }
             setState(() {});
           },
-          title: Text(element.name),
+          title: Text(value.name),
         ),
       );
-    }
+    });
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       child: Padding(

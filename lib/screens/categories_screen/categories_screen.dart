@@ -24,9 +24,9 @@ class CategoriesScreen extends StatelessWidget {
         bloc: BlocProvider.of<CategoriesBloc>(context),
         builder: (BuildContext context, CategoriesState state) {
           List<Widget> categoriesWidgets = [];
-          for (var element in state.categories) {
-            categoriesWidgets.add(CategoryElement(category: element));
-          }
+          state.categories.forEach((key, value) {
+            categoriesWidgets.add(CategoryElement(category: value));
+          });
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

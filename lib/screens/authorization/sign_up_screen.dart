@@ -1,5 +1,8 @@
 import 'package:finances/screens/authorization/auth_text_field.dart';
+import 'package:finances/screens/authorization/bloc/auth_bloc.dart';
+import 'package:finances/screens/authorization/bloc/auth_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({Key? key}) : super(key: key);
@@ -39,9 +42,25 @@ class SignUpScreen extends StatelessWidget {
             TextButton(
               onPressed: () async {
                 if (passwordController.text == repeatPasswordController.text) {
-
+                  BlocProvider.of<AuthBloc>(context).add(AuthSignUp(
+                      loginController.text, passwordController.text));
+                  Navigator.pop(context);
                 } else {
-
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("Passwords don't match"),
+                          actions: [
+                            TextButton(
+                              child: const Text('Ok'),
+                              onPressed: (){
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        );
+                      });
                 }
               },
               child: const Text("Sign Up"),

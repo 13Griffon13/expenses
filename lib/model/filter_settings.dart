@@ -5,9 +5,11 @@ class FilterSettings {
   DateTime to;
   List<PurchaseCategory>? categories;
 
-  FilterSettings({DateTime? from, DateTime? to, this.categories})
-      : from = from ?? DateTime.now().subtract(const Duration(days: 30)),
-        to = to ?? DateTime.now();
+  FilterSettings({required DateTime from, required DateTime to, this.categories})
+      : from = DateTime(from.year, from.month, from.day),
+        to = DateTime(to.year, to.month, to.day, 23, 59, 59);
+
+
 
   bool isCategorySelected(PurchaseCategory category){
     if(categories==null){
