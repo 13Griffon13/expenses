@@ -54,9 +54,20 @@ class _CategorySelectionDialogueState extends State<CategorySelectionDialogue> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Filter by category',
+                style: TextStyle(
+                  fontSize: 24.0,
+                ),
+              ),
+            ),
             Flexible(
+              fit: FlexFit.loose,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,15 +80,13 @@ class _CategorySelectionDialogueState extends State<CategorySelectionDialogue> {
                 _bloc.add(CategoryChanged(categories: null));
                 Navigator.of(context).pop();
               },
-              child: const Text('all'),
+              child: const Text('Select all'),
             ),
-            Center(
-              child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.arrow_back),
-              ),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back),
             )
           ],
         ),
