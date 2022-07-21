@@ -39,17 +39,23 @@ class _EditRecordScreenState extends State<EditRecordScreen> {
         categoryId = record?.categoryId ?? '_';
 
   @override
+  void initState() {
+    super.initState();
+    var state = BlocProvider.of<CategoriesBloc>(context).state;
+    if (id == '!@#%^&') {
+      id = const Uuid().v1();
+      categoryId = state.categories.values.first.id;
+    }
+    if(!state.isCategoryExist(categoryId)){
+      categoryId = state.categories.values.first.id;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<CategoriesBloc, CategoriesState>(
         bloc: BlocProvider.of<CategoriesBloc>(context),
         builder: (BuildContext context, state) {
-          if (id == '!@#%^&') {
-            id = const Uuid().v1();
-            categoryId = state.categories.values.first.id;
-          }
-          if(!state.isCategoryExist(categoryId)){
-            categoryId = state.categories.values.first.id;
-          }
           return Scaffold(
             appBar: AppBar(
               leading: IconButton(
