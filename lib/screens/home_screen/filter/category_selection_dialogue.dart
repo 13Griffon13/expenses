@@ -82,11 +82,11 @@ class _CategorySelectionDialogueState extends State<CategorySelectionDialogue> {
               },
               child: const Text('Select all'),
             ),
-            IconButton(
+            TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              icon: const Icon(Icons.arrow_back),
+              child: const Text('Back'),
             )
           ],
         ),
