@@ -9,12 +9,11 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
   FirebaseServices firebaseServices;
 
   CategoriesBloc({initialState, required this.firebaseServices})
-      : super(initialState){
-
+      : super(initialState) {
     firebaseServices.categoriesStream().listen((event) {
       Map<String, PurchaseCategory> result = {};
       for (var element in event) {
-        result[element['id']]=PurchaseCategory.fromMap(element.map);
+        result[element['id']] = PurchaseCategory.fromMap(element.map);
       }
       if (result.isEmpty) {
         add(
@@ -25,8 +24,9 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
             ),
           ),
         );
-      }else{
-        emit(CategoriesState(categories: result));
+      } else {
+        emit(CategoriesState(
+            categories: result, status: CategoriesStateStatus.success));
       }
     });
     on<CategoriesAdded>((event, emmit) async {

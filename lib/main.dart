@@ -53,9 +53,7 @@ class MyApp extends StatelessWidget {
         }),
         BlocProvider<CategoriesBloc>(create: (context) {
           CategoriesBloc bloc = CategoriesBloc(
-            initialState: CategoriesState(
-              categories: {},
-            ),
+            initialState: CategoriesState.initial(),
             firebaseServices: firebaseServices,
           );
           bloc.stream.listen((event) {

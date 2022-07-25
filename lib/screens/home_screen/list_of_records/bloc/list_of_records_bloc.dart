@@ -23,7 +23,7 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
   static const String docName = "records";
 
   ListOfRecordsBloc({required this.firebaseServices})
-      : super(ListOfRecordsState()) {
+      : super(ListOfRecordsState.initial()) {
     firebaseServices.recordsStream(docName).listen((event) {
       emit(ListOfRecordsState(status: ListOfRecordsStatus.loading));
       _exceptionCheck(() async {
