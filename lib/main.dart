@@ -2,6 +2,7 @@ import 'package:finances/screens/authorization/bloc/auth_bloc.dart';
 import 'package:finances/screens/authorization/bloc/auth_state.dart';
 import 'package:finances/screens/authorization/sign_in_screen.dart';
 import 'package:finances/screens/categories_screen/categories_bloc/categories_bloc.dart';
+import 'package:finances/screens/categories_screen/categories_bloc/categories_event.dart';
 import 'package:finances/screens/categories_screen/categories_bloc/categories_state.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_bloc.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_state.dart';
@@ -77,6 +78,8 @@ class MyApp extends StatelessWidget {
                   if (state.status == AuthStatus.signedIn) {
                     BlocProvider.of<ListOfRecordsBloc>(context)
                         .add(InitialListOfRecords());
+                    BlocProvider.of<CategoriesBloc>(context)
+                        .add(InitiateCategories());
                     return const HomePage();
                   } else {
                     return SignInScreen();
