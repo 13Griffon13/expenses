@@ -100,18 +100,11 @@ class FirebaseServices {
     return fireAuth.signUp(email, password);
   }
 
+  void signOut(){
+    fireAuth.signOut();
+  }
+
   bool isSignedIn() {
     return fireAuth.isSignedIn;
   }
-
-// Future<void> initCollections() async {
-//   bool recordsCheck = await fireStore
-//       .collection(firebaseAuth.userId)
-//       .document(recordsCollection)
-//       .exists;
-//   bool categoriesCheck = await fireStore
-//       .collection(firebaseAuth.userId)
-//       .document(categoriesCollection)
-//       .exists;
-// }
 }

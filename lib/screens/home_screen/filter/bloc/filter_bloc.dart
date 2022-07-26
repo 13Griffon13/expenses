@@ -42,5 +42,8 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
         ),
       );
     });
+    on<ResetFilters>((event,emit){
+      emit(FilterState.initial());
+    });
   }
 }

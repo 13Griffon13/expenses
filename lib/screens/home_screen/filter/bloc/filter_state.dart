@@ -6,13 +6,13 @@ class FilterState {
   FilterStateStatus status;
   FilterSettings settings;
 
-  FilterState({FilterStateStatus? status, FilterSettings? settings})
-      : status = status ?? FilterStateStatus.initial,
-        settings = settings ?? FilterSettings(
-          from: DateTime.now().subtract(const Duration(days: 30)),
-          to: DateTime.now(),
-        );
+  FilterState({required this.status, required this.settings});
 
+  FilterState.initial()
+      : status = FilterStateStatus.initial,
+        settings = FilterSettings(
+            from: DateTime.now().subtract(const Duration(days: 30),),
+            to: DateTime.now());
 
 
 }

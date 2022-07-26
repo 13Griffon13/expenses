@@ -22,12 +22,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignUp>((event, emit) async {
       try {
         emit(AuthState(status: AuthStatus.loading));
-        await firebaseServices.signUp(event.login, event.password).then((value) {
-          emit(AuthState(status: AuthStatus.signedOut));
+        await firebaseServices
+            .signUp(event.login, event.password)
+            .then((value) {
+          emit(AuthState(status: AuthStatus.signedIn));
         });
       } catch (e) {
         emit(AuthState(status: AuthStatus.error, error: e.toString()));
       }
+    });
+    on<AuthSignOut>((event, emit) async {
+      firebaseServices.signOut();
+      emit(AuthState(status: AuthStatus.signedOut, user: null));
     });
   }
 }

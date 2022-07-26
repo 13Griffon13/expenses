@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           );
         }),
         BlocProvider<FilterBloc>(create: (BuildContext context) {
-          FilterBloc bloc = FilterBloc(FilterState());
+          FilterBloc bloc = FilterBloc(FilterState.initial());
           bloc.stream.listen((event) {
             if (event.status == FilterStateStatus.success) {
               BlocProvider.of<ListOfRecordsBloc>(context)

@@ -1,16 +1,24 @@
 abstract class AuthEvent{
+
+}
+
+abstract class AuthEntryEvent extends AuthEvent{
   final String login;
   final String password;
 
-  AuthEvent(this.login, this.password);
+  AuthEntryEvent(this.login, this.password);
 }
 
-class AuthSignIn extends AuthEvent{
+class AuthSignOut extends AuthEvent{
+
+}
+
+class AuthSignIn extends AuthEntryEvent{
   AuthSignIn(String login, String password) : super(login, password);
 
 }
 
-class AuthSignUp extends AuthEvent{
+class AuthSignUp extends AuthEntryEvent{
   AuthSignUp(String login, String password) : super(login, password);
 
 }

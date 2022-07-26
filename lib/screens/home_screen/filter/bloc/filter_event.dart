@@ -4,6 +4,10 @@ abstract class FilterEvent{
 
 }
 
+class ResetFilters extends FilterEvent{
+
+}
+
 class DateChanged extends FilterEvent{
   DateTime dateTime;
 
