@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:finances/model/filter_settings.dart';
 import 'package:finances/model/purchase_record.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_event.dart';
@@ -21,20 +23,24 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
   //records will be saved not in 1 documents but to multiple documents
   // depending on date
   static const String docName = "records";
+  StreamSubscription<List<Document>>? collectionSubscription;
 
-  ListOfRecordsBloc({required this.firebaseServices})
-      : super(ListOfRecordsState.initial()) {
-    firebaseServices.recordsStream(docName).listen((event) {
-      emit(ListOfRecordsState(status: ListOfRecordsStatus.loading));
-      _exceptionCheck(() async {
-        emit(ListOfRecordsState(
-            records: _listLoader(event), status: ListOfRecordsStatus.success));
+  ListOfRecordsBloc({initialState, required this.firebaseServices})
+      : super(initialState) {
+    on<InitialListOfRecords>((event, emit) {
+      collectionSubscription =
+          firebaseServices.recordsStream(docName).listen((event) {
+        add(UpdateListOfRecords(recordList: _listLoader(event)));
       });
     });
-    on<InitialListOfRecords>((event, emit) async {
+    on<UpdateListOfRecords>((event, emit) {
       emit(ListOfRecordsState(status: ListOfRecordsStatus.loading));
+      _exceptionCheck(() {
+        emit(ListOfRecordsState(
+            records: event.recordList, status: ListOfRecordsStatus.success));
+      });
     });
-    on<CategoriesChanged>((event,emit){
+    on<CategoriesChanged>((event, emit) {
       emit(ListOfRecordsState(
         status: ListOfRecordsStatus.success,
         records: state.records,
@@ -58,14 +64,17 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
         await firebaseServices.editRecord(event.record, docName);
       });
     });
-    on<FilterChanged>((event, emit) async{
+    on<FilterChanged>((event, emit) async {
       emit(ListOfRecordsState(status: ListOfRecordsStatus.loading));
       filterSettings = event.filterSettings;
-      await firebaseServices
-          .getRecords(filterSettings,docName)
-          .then((value) => emit(ListOfRecordsState(
-          status: ListOfRecordsStatus.success,
-          records: _listLoader(value))));
+      await firebaseServices.getRecords(filterSettings, docName).then((value) =>
+          emit(ListOfRecordsState(
+              status: ListOfRecordsStatus.success,
+              records: _listLoader(value))));
+    });
+    on<ResetList>((event, emit) {
+      collectionSubscription!.cancel();
+      emit(ListOfRecordsState.initial());
     });
   }
 
@@ -78,8 +87,10 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
           list.add(record);
         }
       } catch (e) {
-        emit(
-            ListOfRecordsState(status: ListOfRecordsStatus.error, records: []));
+        emit(ListOfRecordsState(
+            status: ListOfRecordsStatus.error,
+            records: [],
+            error: e.toString()));
       }
     }
     return list;
@@ -89,7 +100,10 @@ class ListOfRecordsBloc extends Bloc<ListOfRecordsEvent, ListOfRecordsState> {
     try {
       callback();
     } catch (exception) {
-      emit(ListOfRecordsState(status: ListOfRecordsStatus.error, records: []));
+      emit(ListOfRecordsState(
+          status: ListOfRecordsStatus.error,
+          records: [],
+          error: exception.toString()));
     }
   }
 

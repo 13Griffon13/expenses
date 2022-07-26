@@ -13,11 +13,21 @@ class FilterChanged extends ListOfRecordsEvent{
  FilterChanged({required this.filterSettings});
 }
 
+class UpdateListOfRecords extends ListOfRecordsEvent{
+  List<PurchaseRecord> recordList;
+
+  UpdateListOfRecords({required this.recordList});
+}
+
 class InitialListOfRecords extends ListOfRecordsEvent{
 
 }
 
 class CategoriesChanged extends ListOfRecordsEvent{
+
+}
+
+class ResetList extends ListOfRecordsEvent{
 
 }
 

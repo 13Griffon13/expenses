@@ -3,7 +3,6 @@ import 'package:finances/screens/authorization/bloc/auth_bloc.dart';
 import 'package:finances/screens/authorization/bloc/auth_event.dart';
 import 'package:finances/screens/authorization/bloc/auth_state.dart';
 import 'package:finances/screens/authorization/sign_up_screen.dart';
-import 'package:finances/screens/home_screen/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,14 +14,10 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //todo probably should revisit this screen
+    var state = BlocProvider.of<AuthBloc>(context).state;
     return Scaffold(
-      body: BlocBuilder<AuthBloc, AuthState>(
-          bloc: BlocProvider.of<AuthBloc>(context),
-          builder: (context, state) {
-            if (state.status == AuthStatus.signedIn) {
-              return const HomePage();
-            }
-            return Container(
+      body: Container(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,8 +72,7 @@ class SignInScreen extends StatelessWidget {
                   )
                 ],
               ),
-            );
-          }),
+            ),
     );
   }
 }

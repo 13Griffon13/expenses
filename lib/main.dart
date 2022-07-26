@@ -5,8 +5,10 @@ import 'package:finances/screens/categories_screen/categories_bloc/categories_bl
 import 'package:finances/screens/categories_screen/categories_bloc/categories_state.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_bloc.dart';
 import 'package:finances/screens/home_screen/filter/bloc/filter_state.dart';
+import 'package:finances/screens/home_screen/home.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_bloc.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_event.dart';
+import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_state.dart';
 import 'package:finances/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,11 +31,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ListOfRecordsBloc>(create: (context) {
-          ListOfRecordsBloc bloc = ListOfRecordsBloc(
+          return ListOfRecordsBloc(
+            initialState: ListOfRecordsState.initial(),
             firebaseServices: firebaseServices,
           );
-          bloc.add(InitialListOfRecords());
-          return bloc;
         }),
         BlocProvider<FilterBloc>(create: (BuildContext context) {
           FilterBloc bloc = FilterBloc(FilterState());
@@ -64,13 +65,25 @@ class MyApp extends StatelessWidget {
         }),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Expenses',
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
         ),
-        home: SafeArea(
-          child: SignInScreen(),
-        ),
+        home: Builder(builder: (context) {
+          return SafeArea(
+            child: BlocBuilder<AuthBloc, AuthState>(
+                bloc: BlocProvider.of<AuthBloc>(context),
+                builder: (context, state) {
+                  if (state.status == AuthStatus.signedIn) {
+                    BlocProvider.of<ListOfRecordsBloc>(context)
+                        .add(InitialListOfRecords());
+                    return const HomePage();
+                  } else {
+                    return SignInScreen();
+                  }
+                }),
+          );
+        }),
       ),
     );
   }

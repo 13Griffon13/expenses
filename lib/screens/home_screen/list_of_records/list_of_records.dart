@@ -2,6 +2,7 @@ import 'package:finances/screens/categories_screen/categories_bloc/categories_bl
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_bloc.dart';
 import 'package:finances/screens/home_screen/list_of_records/bloc/list_of_records_state.dart';
 import 'package:finances/screens/home_screen/list_of_records/list_of_record_tile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,7 +56,14 @@ class ListOfRecords extends StatelessWidget {
           case ListOfRecordsStatus.loading:
             return const Center(child: CircularProgressIndicator());
           case ListOfRecordsStatus.error:
-            return const Center(child: Icon(Icons.error));
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error),
+                Text(state.error!, style: const TextStyle(color: Colors.red),),
+              ],
+            );
           case ListOfRecordsStatus.initial:
             return const Center(
               child: Text('Initialization'),
